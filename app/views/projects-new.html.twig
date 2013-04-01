@@ -1,0 +1,65 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<h1>Нов проект</h1>
+
+	{% if success_message is defined %}
+    <div class="alert alert-success">
+		{{ success_message }}
+    </div>
+	{% endif %}
+
+	{% if error_message is defined %}
+    <div class="alert alert-error">
+		{{ error_message }}
+    </div>
+	{% endif %}
+
+	<p>Тук може да представите своя проект и да заявите участие в авторското ателие.</p>
+
+	<form action="{{ path('projects-new') }}" method="post">
+		<div class="control-group">
+			<label class="control-label" for="inputAuthor">За вас</label>
+			<span class="help-block">Представете се с няколко изречения</span>
+			<div class="controls">
+				<textarea class="input-block-level" id="inputAuthor" name="author" rows="10" required>{{app.request.get('author')}}</textarea>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputProject">Описание на проекта</label>
+			<span class="help-block">Дайте сравнително подробно описание на вашето начинание и от какво имате нужда, за да го завършите. Повечето хора се нуждаят от финансови средства.</span>
+			<div class="controls">
+				<textarea class="input-block-level" id="inputProject" name="project" rows="10" required>{{app.request.get('message')}}</textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputName">Име</label>
+			<div class="controls">
+				<input type="text" id="inputName" name="name" placeholder="Вашето име" required  value="{{app.request.get('name')}}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">Поща</label>
+			<div class="controls">
+				<input type="text" id="inputEmail" name="email" placeholder="Вашата електронна поща" required  value="{{app.request.get('email')}}">
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn">Изпращане на заявката</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}
+
+{% block stylesheets %}
+	{{parent()}}
+	<style>
+	.help-block {
+		padding-left: 30%;
+		text-align: right;
+	}
+	</style>
+{% endblock %}

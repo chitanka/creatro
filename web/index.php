@@ -7,7 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 $app = new Silex\Application();
 $app['root.dir'] = $rootDir;
 $app['app.dir'] = $rootDir.'/app';
-$app['debug'] = false;
+$app['config'] = require $app['app.dir'].'/config/config.php';
+$app['debug'] = $app['config']['debug'];
 
 $app->register(new \Silex\Provider\TwigServiceProvider(), array(
 	'twig.path'    => $app['app.dir'].'/views',
@@ -32,8 +33,29 @@ $app->get('/project/{project}', function($project) use ($app) {
 });
 
 $app->get('/projects/new', function() use ($app) {
-	return $app['twig']->render('projects-create.html.twig');
+	return $app['twig']->render('projects-new.html.twig');
 });
+$app->post('/projects/new', function(Request $request) use ($app) {
+	$config = $app['config']['mailer'];
+	$app['swiftmailer.options'] = $config['options'];
+
+	$messageBody = "За автора:\n".
+		$request->get('author') . "\n\n".
+		"За проекта:\n".
+		$request->get('project');
+	$message = \Swift_Message::newInstance()
+		->setSubject('[Авторско ателие] Нова заявка')
+		->setFrom(array($request->get('email') => $request->get('name')))
+		->setTo(array($config['recipient']))
+		->setBody($messageBody);
+	$app['mailer']->send($message);
+
+	return $app['twig']->render('projects-new.html.twig', array(
+		'success_message' => 'Заявката ви беше получена. Благодарим ви!',
+	));
+})->bind('projects-new');
+
+
 $app->get('/projects/original', function() use ($app) {
 	return $app->redirect('/');
 	return $app['twig']->render('projects-original.html.twig');
@@ -59,9 +81,9 @@ $app->get('/about', function() use ($app) {
 
 $app->get('/contact', function() use ($app) {
 	return $app['twig']->render('contact.html.twig');
-})->bind('contact');
+});
 $app->post('/contact', function(Request $request) use ($app) {
-	$config = require $app['app.dir'].'/config/mailer.php';
+	$config = $app['config']['mailer'];
 	$app['swiftmailer.options'] = $config['options'];
 
 	$messageBody = $request->get('message');
@@ -81,6 +103,6 @@ $app->post('/contact', function(Request $request) use ($app) {
 	return $app['twig']->render('contact.html.twig', array(
 		'success_message' => 'Съобщението ви беше получено.',
 	));
-});
+})->bind('contact');
 
 $app->run();
