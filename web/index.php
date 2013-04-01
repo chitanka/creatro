@@ -21,34 +21,44 @@ $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new \Silex\Provider\SwiftmailerServiceProvider());
 
 $app->get('/', function() use ($app) {
-    return $app['twig']->render('index.html.twig');
+	return $app['twig']->render('index.html.twig');
 })->bind('home');
 
 $app->get('/project/{project}', function($project) use ($app) {
-    return $app['twig']->render('project.html.twig', array(
+	return $app->redirect('/');
+	return $app['twig']->render('project.html.twig', array(
 		'project' => $project,
 	));
 });
 
+$app->get('/projects/new', function() use ($app) {
+	return $app['twig']->render('projects-create.html.twig');
+});
 $app->get('/projects/original', function() use ($app) {
-    return $app['twig']->render('projects-original.html.twig');
+	return $app->redirect('/');
+	return $app['twig']->render('projects-original.html.twig');
 })->bind('projects-original');
 $app->get('/projects/translations', function() use ($app) {
-    return $app['twig']->render('projects-translations.html.twig');
+	return $app->redirect('/');
+	return $app['twig']->render('projects-translations.html.twig');
 })->bind('projects-translations');
 
 $app->get('/author/{author}', function($author) use ($app) {
-    return $app['twig']->render('author.html.twig', array(
+	return $app->redirect('/');
+	return $app['twig']->render('author.html.twig', array(
 		'author' => $author,
 	));
 });
+$app->get('/genre/{genre}', function($genre) use ($app) {
+	return $app->redirect('/');
+});
 
 $app->get('/about', function() use ($app) {
-    return $app['twig']->render('about.html.twig');
+	return $app['twig']->render('about.html.twig');
 })->bind('about');
 
 $app->get('/contact', function() use ($app) {
-    return $app['twig']->render('contact.html.twig');
+	return $app['twig']->render('contact.html.twig');
 })->bind('contact');
 $app->post('/contact', function(Request $request) use ($app) {
 	$config = require $app['app.dir'].'/config/mailer.php';
@@ -61,7 +71,7 @@ $app->post('/contact', function(Request $request) use ($app) {
 		));
 	}
 
-    $message = \Swift_Message::newInstance()
+	$message = \Swift_Message::newInstance()
 		->setSubject('[Авторско ателие] '.$request->get('title'))
 		->setFrom(array($request->get('email') => $request->get('name')))
 		->setTo(array($config['recipient']))
