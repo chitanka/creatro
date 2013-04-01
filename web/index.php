@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 $app = new Silex\Application();
 $app['root.dir'] = $rootDir;
 $app['app.dir'] = $rootDir.'/app';
-$app['debug'] = true;
+$app['debug'] = false;
 
 $app->register(new \Silex\Provider\TwigServiceProvider(), array(
 	'twig.path'    => $app['app.dir'].'/views',
