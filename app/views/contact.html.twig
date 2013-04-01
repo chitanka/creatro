@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<h1>Връзка с екипа</h1>
+
+	{% if success_message is defined %}
+    <div class="alert alert-success">
+		{{ success_message }}
+    </div>
+	{% endif %}
+
+	{% if error_message is defined %}
+    <div class="alert alert-error">
+		{{ error_message }}
+    </div>
+	{% endif %}
+
+	<form action="{{ path('contact') }}" method="post" class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="inputTitle">Относно</label>
+			<div class="controls">
+				<input type="text" id="inputTitle" name="title" value="{{app.request.get('title', 'За авторското ателие')}}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputMessage">Съобщение</label>
+			<div class="controls">
+				<textarea id="inputMessage" name="message" rows="10" required>{{app.request.get('message')}}</textarea>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputName">Име</label>
+			<div class="controls">
+				<input type="text" id="inputName" name="name" placeholder="Име" required  value="{{app.request.get('name')}}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">Поща</label>
+			<div class="controls">
+				<input type="text" id="inputEmail" name="email" placeholder="електронна@поща" required  value="{{app.request.get('email')}}">
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn">Изпращане</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}
