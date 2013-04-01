@@ -2,5 +2,6 @@
 /app/cache/*
 /app/logs/*
 /vendor/*
+composer.phar
 *swp
 !.gitkeep
